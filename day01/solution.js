@@ -19,3 +19,11 @@ for (var i = 3; i < rawDepths.length; i++) {
 }
 
 console.log('Part 2:  ' + increases)
+
+
+increases = 0
+for (var i = 3; i < rawDepths.length; i++) {
+  increases += rawDepths[i] > rawDepths[i - 3] ? 1 : 0
+}
+
+console.log('Part 2 (simpler):  ' + increases)
