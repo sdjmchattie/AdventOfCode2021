@@ -1,5 +1,5 @@
 import { readIntList } from '../lib/file-access.js'
-import { sumArray } from '../lib/lib.js'
+import { sumArray } from '../lib/array-func-tools.js'
 
 const rawDepths = readIntList('./day01/input.txt')
 
