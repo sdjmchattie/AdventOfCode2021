@@ -1,9 +1,7 @@
 import { readLines } from '../lib/file-access.js'
 import { productArray } from '../lib/array-func-tools.js'
 
-const rawInput = readLines('./day02/input.txt')
-
-const deltas = rawInput.filter((line) => line.length > 0).map((line) => {
+const deltas = readLines('./day02/input.txt', (line) => {
   const parts = line.split(' ')
   const direction = parts[0]
   const delta = parseInt(parts[1])
