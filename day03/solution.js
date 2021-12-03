@@ -16,7 +16,7 @@ console.log('Part 1:  ' + gammaRate * epsilonRate)
 
 
 function bitwiseReduce(values, mostCommon, prefix='') {
-  if (values.length === 1 || values[0].length === 0) {
+  if (values.length === 1) {
     return prefix + values[0]
   }
 
