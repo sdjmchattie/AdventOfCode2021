@@ -29,13 +29,10 @@ function bitwiseReduce(values, mostCommon, prefix='') {
     return acc
   }, {'0': 0, '1': 0})
 
-  var nextBit
   const difference = counts['1'] - counts['0']
-  if (difference >= 0) {
-    nextBit = mostCommon ? '1' : '0'
-  } else {
-    nextBit = mostCommon ? '0' : '1'
-  }
+  const nextBitForMostCommonMode = difference >= 0 ? '1' : '0'
+  const nextBitForLeastCommonMode = difference >= 0 ? '0' : '1'
+  const nextBit = mostCommon ? nextBitForMostCommonMode : nextBitForLeastCommonMode
 
   return bitwiseReduce(
     values.filter((v) => v[0] === String(nextBit)).map((v) => v.substring(1)),
