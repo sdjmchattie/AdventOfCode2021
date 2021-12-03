@@ -14,4 +14,39 @@ const epsilonRate = parseInt(binaryEpsilonRate, 2)
 
 console.log('Part 1:  ' + gammaRate * epsilonRate)
 
-console.log('Part 2:  ')
+
+function bitwiseReduce(values, mostCommon, prefix='') {
+  if (values.length === 1) {
+    return prefix + values[0]
+  }
+
+  if (values[0].length === 0) {
+    return prefix
+  }
+
+  const counts = values.reduce((acc, v) => {
+    acc[v[0]] = acc[v[0]] + 1
+    return acc
+  }, {'0': 0, '1': 0})
+
+  var nextBit
+  const difference = counts['1'] - counts['0']
+  if (difference >= 0) {
+    nextBit = mostCommon ? '1' : '0'
+  } else {
+    nextBit = mostCommon ? '0' : '1'
+  }
+
+  return bitwiseReduce(
+    values.filter((v) => v[0] === String(nextBit)).map((v) => v.substring(1)),
+    mostCommon,
+    prefix + nextBit
+  )
+}
+
+const binaryOxyGenRating = bitwiseReduce(rawInput, true)
+const oxyGenRating = parseInt(binaryOxyGenRating, 2)
+const binaryCo2ScrubRating = bitwiseReduce(rawInput, false)
+const co2ScrubRating = parseInt(binaryCo2ScrubRating, 2)
+
+console.log('Part 2:  ' + oxyGenRating * co2ScrubRating)
