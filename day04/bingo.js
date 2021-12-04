@@ -24,8 +24,7 @@ export default class Bingo {
   }
 
   get score() {
-    const allNumbers = this.board.flat()
-    const remainingNumbers = allNumbers.filter((v) => this.drawnNumbers.indexOf(v) > this.winningDraw)
+    const remainingNumbers = this.board.flat().filter((v) => this.drawnNumbers.indexOf(v) > this.winningDraw)
     return sumArray(remainingNumbers) * this.drawnNumbers[this.winningDraw]
   }
 }

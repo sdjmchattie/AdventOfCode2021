@@ -15,8 +15,8 @@ rawInput.slice(2).forEach((line) => {
   board.push(line.trim().split(/\s+/).map((n) => parseInt(n)))
 })
 
-const winningBoard = boards.sort((boardA, boardB) => boardA.winningDraw < boardB.winningDraw ? -1 : 1)[0]
+const boardsInWinOrder = boards.sort((boardA, boardB) => boardA.winningDraw < boardB.winningDraw ? -1 : 1)
 
-console.log('Part 1:  ' + winningBoard.score)
+console.log('Part 1:  ' + boardsInWinOrder[0].score)
 
-console.log('Part 2:  ')
+console.log('Part 2:  ' + boardsInWinOrder.pop().score)
