@@ -13,7 +13,20 @@ function coordsBetweenHorz(x1, x2, y) {
   return [...Array(range).keys()].map((x) => `${x + minX},${y}`)
 }
 
-function coordsBetween(definition) {
+function coordsBetweenDiag(x1, x2, y1, y2) {
+  const leftToRight = x1 < x2
+  const xLeft = leftToRight ? x1 : x2
+  const xRight = leftToRight ? x2 : x1
+  const yLeft = leftToRight ? y1 : y2
+  const yRight = leftToRight ? y2 : y1
+
+  const gradient = yLeft < yRight ? 1 : -1
+  const range = xRight - xLeft + 1
+
+  return [...Array(range).keys()].map((i) => `${xLeft + i},${yLeft + i * gradient}`)
+}
+
+function coordsBetween(definition, processDiagonals = false) {
   const coords = definition.match(/(\d+),(\d+) -> (\d+),(\d+)/)
   const x1 = parseInt(coords[1])
   const y1 = parseInt(coords[2])
@@ -24,15 +37,19 @@ function coordsBetween(definition) {
     return coordsBetweenVert(y1, y2, x1)
   } else if (y1 === y2) {
     return coordsBetweenHorz(x1, x2, y1)
+  } else if (processDiagonals) {
+    return coordsBetweenDiag(x1, x2, y1, y2)
   } else {
     return []
   }
 }
 
 const rawInput = readLines('./day05/input.txt')
-const allCoords = rawInput.flatMap(coordsBetween)
-const counts = countValues(allCoords)
+const part1Counts = countValues(rawInput.flatMap((v) => coordsBetween(v, false)))
 
-console.log('Part 1:  ' + Object.values(counts).filter((v) => v > 1).length)
+console.log('Part 1:  ' + Object.values(part1Counts).filter((v) => v > 1).length)
 
-console.log('Part 2:  ')
+
+const part2Counts = countValues(rawInput.flatMap((v) => coordsBetween(v, true)))
+
+console.log('Part 2:  ' + Object.values(part2Counts).filter((v) => v > 1).length)
