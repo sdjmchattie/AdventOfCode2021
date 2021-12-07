@@ -10,9 +10,16 @@ function median(values){
 const rawInput = readLines('./day07/input.txt')
 const positions = rawInput[0].split(',').map((x) => parseInt(x))
 const medianPos = median(positions)
-
 const totalFuel = positions.reduce((acc, x) => acc + Math.abs(medianPos - x), 0)
 
 console.log('Part 1:  ' + totalFuel)
 
-console.log('Part 2:  ')
+const highestPosition = [...positions].pop()
+const fuelUsages = [...Array(highestPosition).keys()].map((i) => {
+  return positions.reduce((acc, x) => {
+    const fuel = Math.abs(i - x)
+    return acc + fuel * (fuel + 1) / 2
+  }, 0)
+})
+
+console.log('Part 2:  ' + Math.min(...fuelUsages))
