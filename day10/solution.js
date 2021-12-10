@@ -6,18 +6,10 @@ const braceScore = { ')': 3, ']': 57, '}': 1197, '>': 25137 }
 function syntaxErrorScore(line) {
   const expected = []
   for(var char of line) {
-    switch (char) {
-      case '(':
-      case '[':
-      case '{':
-      case '<':
-        expected.push(braceComplement[char])
-        break
-      case ')':
-      case ']':
-      case '}':
-      case '>':
-        if (expected.pop() !== char) { return braceScore[char] }
+    if (char in braceComplement) {
+      expected.push(braceComplement[char])
+    } else if (char in braceScore && expected.pop() !== char) {
+      return braceScore[char]
     }
   }
 
