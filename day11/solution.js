@@ -47,13 +47,17 @@ const adjacentFunc = (maxX, maxY) =>
 const rawInput = readLines('./day11/input.txt');
 const parsed = rawInput.map((y) => y.split('').map((x) => parseInt(x)));
 
+var stepCount = 0;
+var step100State;
 var state = { octopuses: [...parsed], flashes: 0 };
-for (var i = 0; i < 100; i++) {
+while (state.octopuses.flat().some((octopus) => octopus > 0)) {
   state.octopuses = step(state.octopuses);
   state = resolveFlashes(state);
+  stepCount += 1;
+  if (stepCount === 100) {
+    step100State = { ...state };
+  }
 }
 
-
-console.log('Part 1:  ' + state.flashes);
-
-console.log('Part 2:  ');
+console.log('Part 1:  ' + step100State.flashes);
+console.log('Part 2:  ' + stepCount);
