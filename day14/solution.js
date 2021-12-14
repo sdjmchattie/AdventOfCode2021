@@ -1,42 +1,16 @@
 import _ from 'lodash';
-import { countValues, maxArray, minArray } from '../lib/array-func-tools.js';
+import { maxArray, minArray } from '../lib/array-func-tools.js';
 import { readLines } from '../lib/file-access.js';
-
-const stepFunc = (componentMap) =>
-  function (chain) {
-    const newComponents = chain.split('').reduce((acc, _, i) => {
-      const key = chain.slice(i, i + 2);
-      return acc + (componentMap[key] || '');
-    }, '');
-
-    return _.zip(chain.split(''), newComponents.split('')).flat().join('');
-  };
-
-const rawInput = readLines('./day14/input.txt');
-const startChain = rawInput[0];
-const componentMap = rawInput.slice(2).reduce((acc, item) => {
-  const matches = item.match(/(..) -> (.)/);
-  return { ...acc, [matches[1]]: matches[2] };
-}, {});
-const step = stepFunc(componentMap);
-
-var chain = startChain;
-for (var i = 0; i < 10; i++) {
-  chain = step(chain);
-}
-const counts = countValues(chain.split(''));
-
-console.log(
-  'Part 1:  ' +
-    (maxArray(Object.values(counts)) - minArray(Object.values(counts)))
-);
 
 const makeCountingDictWithKeys = (keys) =>
   keys.reduce((acc, key) => {
     return { ...acc, [key]: 0 };
   }, {});
 
-const newStepFunc = (componentMap) =>
+const countRange = (countDict) =>
+  maxArray(Object.values(countDict)) - minArray(Object.values(countDict));
+
+const stepFunc = (componentMap) =>
   function (singleCounts, pairCounts) {
     const newPairCounts = makeCountingDictWithKeys(Object.keys(pairCounts));
     Object.keys(pairCounts).forEach((key) => {
@@ -50,6 +24,14 @@ const newStepFunc = (componentMap) =>
     return [singleCounts, newPairCounts];
   };
 
+const rawInput = readLines('./day14/input.txt');
+const startChain = rawInput[0];
+const componentMap = rawInput.slice(2).reduce((acc, item) => {
+  const matches = item.match(/(..) -> (.)/);
+  return { ...acc, [matches[1]]: matches[2] };
+}, {});
+const step = stepFunc(componentMap);
+
 var singleCounts = makeCountingDictWithKeys(
   _.uniq(Object.values(componentMap))
 );
@@ -62,15 +44,14 @@ for (var i = 0; i < chain.length - 1; i++) {
 }
 singleCounts[chain[chain.length - 1]] += 1;
 
-const newStep = newStepFunc(componentMap);
-for (var i = 0; i < 40; i++) {
-  [singleCounts, pairCounts] = newStep(singleCounts, pairCounts);
+for (var i = 0; i < 10; i++) {
+  [singleCounts, pairCounts] = step(singleCounts, pairCounts);
 }
 
-console.log(singleCounts);
+console.log('Part 1:  ' + countRange(singleCounts));
 
-console.log(
-  'Part 2:  ' +
-    (maxArray(Object.values(singleCounts)) -
-      minArray(Object.values(singleCounts)))
-);
+for (var i = 0; i < 30; i++) {
+  [singleCounts, pairCounts] = step(singleCounts, pairCounts);
+}
+
+console.log('Part 2:  ' + countRange(singleCounts));
