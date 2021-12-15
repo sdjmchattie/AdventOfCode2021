@@ -61,4 +61,28 @@ const lowestRisk = runDijkstra(
 
 console.log('Part 1:  ' + lowestRisk);
 
-console.log('Part 2:  ');
+const bigRisks = [];
+for (var yRep = 0; yRep < 5; yRep++) {
+  for (var y = 0; y < risks.length; y++) {
+    var row = [];
+    for (var xRep = 0; xRep < 5; xRep++) {
+      const extraRisk = yRep + xRep;
+      for (var x = 0; x < risks[0].length; x++) {
+        var newRisk = risks[y][x] + extraRisk;
+        while (newRisk > 9) {
+          newRisk -= 9;
+        }
+        row.push(newRisk);
+      }
+    }
+    bigRisks.push(row);
+  }
+}
+
+const lowestBigRisk = runDijkstra(
+  bigRisks,
+  [0, 0],
+  [bigRisks[0].length - 1, bigRisks.length - 1]
+);
+
+console.log('Part 2:  ' + lowestBigRisk);
