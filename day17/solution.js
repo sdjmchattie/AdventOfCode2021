@@ -7,7 +7,7 @@ const targetMaxX = Math.max(parseInt(matches[1]), parseInt(matches[2]));
 const targetMinY = Math.min(parseInt(matches[3]), parseInt(matches[4]));
 const targetMaxY = Math.max(parseInt(matches[3]), parseInt(matches[4]));
 
-const possibleXs = Array(targetMaxX / 2)
+const possibleXs = Array(targetMaxX + 1)
   .fill(null)
   .map((_, i) => i)
   .filter((x) => {
@@ -25,7 +25,7 @@ const possibleXs = Array(targetMaxX / 2)
 
 const initials = possibleXs
   .map((initX) => {
-    var initY = 1000;
+    var initY = -1 * targetMinY;
     while (initY > 0) {
       var ix = 0;
       var iy = 0;
@@ -56,4 +56,31 @@ const maxHeight = initials.map((x) => x[2]).reduce((a, x) => Math.max(a, x), 0);
 
 console.log('Part 1:  ' + maxHeight);
 
-console.log('Part 2:  ');
+const allCombos = [];
+possibleXs.forEach((initX) => {
+  var initY = -1 * targetMinY;
+  while (initY >= targetMinY) {
+    var ix = 0;
+    var iy = 0;
+    var dx = initX;
+    var dy = initY;
+    while (ix <= targetMaxX && iy >= targetMinY) {
+      ix += dx;
+      iy += dy;
+      if (
+        ix >= targetMinX &&
+        ix <= targetMaxX &&
+        iy >= targetMinY &&
+        iy <= targetMaxY
+      ) {
+        allCombos.push([initX, initY]);
+        break;
+      }
+      dx = Math.max(dx - 1, 0);
+      dy--;
+    }
+    initY--;
+  }
+});
+
+console.log('Part 2:  ' + allCombos.length);
