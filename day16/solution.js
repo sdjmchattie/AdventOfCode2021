@@ -81,12 +81,41 @@ class Packet {
     return this._body;
   }
   value() {
-    if (this.type() != 4) {
-      // Only type 4 packets have a value.
-      return;
+    switch (this.type()) {
+      case 0:
+        // Sum packet
+        return this.innerPackets().reduce((a, p) => a + p.value(), 0);
+      case 1:
+        // Product packet
+        return this.innerPackets().reduce((a, p) => a * p.value(), 1);
+      case 2:
+        // Minimum packet
+        return this.innerPackets().reduce(
+          (a, p) => Math.min(a, p.value()),
+          Infinity
+        );
+      case 3:
+        // Maximum packet
+        return this.innerPackets().reduce((a, p) => Math.max(a, p.value()), 0);
+      case 4:
+        // Literal value packet
+        return parseInt(this.body(), 2);
+      case 5:
+        // Greater than packet
+        return this.innerPackets()[0].value() > this.innerPackets()[1].value()
+          ? 1
+          : 0;
+      case 6:
+        // Less than packet
+        return this.innerPackets()[0].value() < this.innerPackets()[1].value()
+          ? 1
+          : 0;
+      case 7:
+        // Equal to packet
+        return this.innerPackets()[0].value() === this.innerPackets()[1].value()
+          ? 1
+          : 0;
     }
-
-    return parseInt(this.body(), 2);
   }
   innerPackets() {
     if (!this._innerPackets) {
@@ -128,4 +157,4 @@ const packet = new Packet(binInput);
 
 console.log('Part 1:  ' + packet.versionSum());
 
-console.log('Part 2:  ');
+console.log('Part 2:  ' + packet.value());
