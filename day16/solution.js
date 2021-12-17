@@ -18,8 +18,13 @@ class Packet {
     }
   }
   version() {
-    console.log(this._binVal(0, 3));
     return this._binVal(0, 3);
+  }
+  versionSum() {
+    return (
+      this.version() +
+      this.innerPackets().reduce((acc, pkt) => acc + pkt.versionSum(), 0)
+    );
   }
   type() {
     return this._binVal(3, 6);
@@ -111,13 +116,6 @@ class Packet {
   }
 }
 
-function sumVer(packet) {
-  return (
-    packet.version() +
-    packet.innerPackets().reduce((acc, pkt) => acc + sumVer(pkt), 0)
-  );
-}
-
 const rawInput = readLines('./day16/input.txt');
 const binInput = rawInput[0]
   .split('')
@@ -128,8 +126,6 @@ const binInput = rawInput[0]
 
 const packet = new Packet(binInput);
 
-console.log(binInput);
-console.log(packet.innerPackets());
-console.log('Part 1:  ' + sumVer(packet));
+console.log('Part 1:  ' + packet.versionSum());
 
 console.log('Part 2:  ');
