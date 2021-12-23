@@ -1,18 +1,21 @@
 import { readLines } from '../lib/file-access.js';
 
 function explode(number) {
-  const matches = number.match(/\[\d+,\d+\]/g);
-  if (matches) {
-    for (const match of matches) {
-      const index = number.indexOf(match);
-      const left = number.slice(0, index);
-      const right = number.slice(index + match.length);
-      const openingBraces = right.match(/\[/g)?.length || 0;
-      const closingBraces = right.match(/\]/g)?.length || 0;
-      if (closingBraces - openingBraces == 4) {
-        const leftMatch = left.match(/^(.+)(\d+)(\D+)$/);
-        const rightMatch = right.match(/^(\D+)(\d+)(.+)$/);
-        const matchNums = match.match(/\[(\d+),(\d+)\]/);
+  var startIndex = 0;
+  var match;
+  do {
+    match = number.slice(startIndex).match(/\[\d+,\d+\]/);
+    if (match) {
+      startIndex += match.index;
+      const left = number.slice(0, startIndex);
+      startIndex += match[0].length;
+      const right = number.slice(startIndex);
+      const openingBraces = left.match(/\[/g)?.length || 0;
+      const closingBraces = left.match(/\]/g)?.length || 0;
+      if (openingBraces - closingBraces >= 4) {
+        const leftMatch = left.match(/^(.+?)(\d+)(\D+)$/);
+        const rightMatch = right.match(/^(\D+)(\d+)(.+?)$/);
+        const matchNums = match[0].match(/\[(\d+),(\d+)\]/);
 
         var newLeft = leftMatch
           ? leftMatch[1] +
@@ -29,7 +32,7 @@ function explode(number) {
         return { number: newLeft + '0' + newRight, didExplode: true };
       }
     }
-  }
+  } while (match);
 
   return { number: number, didExplode: false };
 }
@@ -57,7 +60,6 @@ function reduce(number) {
   var reducedNumber = number;
   var incomplete = true;
   while (incomplete) {
-    console.log(reducedNumber);
     const explodeResult = explode(reducedNumber);
     reducedNumber = explodeResult.number;
     if (!explodeResult.didExplode) {
@@ -66,7 +68,6 @@ function reduce(number) {
       incomplete = splitResult.didSplit;
     }
   }
-  console.log();
 
   return reducedNumber;
 }
@@ -84,12 +85,7 @@ function magnitude(number) {
   return magNumber;
 }
 
-//const rawInput = readLines('./day18/input.txt');
-const rawInput = [
-  '[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]',
-  '[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]',
-  '[[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]',
-];
+const rawInput = readLines('./day18/input.txt');
 
 var number = reduce(rawInput[0]);
 for (const nextNumber of rawInput.slice(1)) {
