@@ -95,4 +95,18 @@ for (const nextNumber of rawInput.slice(1)) {
 
 console.log('Part 1:  ' + magnitude(number));
 
-console.log('Part 2:  ');
+var maxMagnitude = 0;
+for (const leftNumber of rawInput) {
+  for (const rightNumber of rawInput) {
+    if (leftNumber === rightNumber) {
+      continue;
+    }
+
+    maxMagnitude = Math.max(
+      maxMagnitude,
+      magnitude(reduce('[' + leftNumber + ',' + rightNumber + ']'))
+    );
+  }
+}
+
+console.log('Part 2:  ' + maxMagnitude);
